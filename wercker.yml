@@ -1,0 +1,66 @@
+box: nodesource/trusty:4.3.0
+validate:
+  steps:
+    - script:
+        name: install wget / curl / unzip
+        code: |
+          apt-get update
+          apt-get -y -qq install wget unzip curl
+    - capgemini/terraform-install:
+        version: "0.7.3"
+    - script:
+        name: run terraform validate
+        code: |
+          terraform get --update
+          terraform validate
+
+deploy:
+  steps:
+    - script:
+        name: install deps
+        code: |
+          apt-get update
+          apt-get install -y software-properties-common python-software-properties python-pip
+          apt-get install -y zip unzip
+
+    - script:
+        name: set ENV vars
+        code: |
+          export EB_APP_NAME=${EB_APP_NAME:-koding}
+          export EB_ENV_NAME=${EB_ENV_NAME:-koding-countly}
+          export EB_ENV_REGION=${EB_ENV_REGION:-us-east-1}
+          export EB_S3_BUCKET_PREFIX=${EB_S3_BUCKET_PREFIX:-kodingdev-eb-deploy}
+
+    - script:
+        name: create version file
+        code: |
+          $WERCKER_ROOT/scripts/create_version.sh
+
+    - script:
+        name: create overrides
+        code: |
+          echo $PAPERTRAIL_PORT > PAPERTRAIL_PORT
+          echo $PAPERTRAIL_TOKEN > PAPERTRAIL_TOKEN
+
+          echo "export AWS_REGION=${EB_ENV_REGION}"          >> env_overrides.sh
+          echo "export AWS_ACCESS_KEY=${AWS_ACCESS_KEY}"     >> env_overrides.sh
+          echo "export AWS_SECRET_KEY=${AWS_SECRET_KEY}"     >> env_overrides.sh
+          echo "export S3_BACKUP_PATH=${S3_BACKUP_PATH}"     >> env_overrides.sh
+          echo "export S3_BACKUP_PREFIX=${S3_BACKUP_PREFIX}" >> env_overrides.sh
+          chmod 777 env_overrides.sh
+
+    - script:
+        name: zip
+        code: |
+          cd $WERCKER_ROOT
+          zip -q --symlinks -r $(cat $WERCKER_ROOT/ARCHIVE_NAME) . || :
+
+    - koding/eb-deploy@0.31.0:
+        access-key: ${AWS_ACCESS_KEY_ID:-$TF_VAR_access_key}
+        secret-key: ${AWS_SECRET_ACCESS_KEY:-$TF_VAR_secret_key}
+        app-name: $EB_APP_NAME
+        env-name: $EB_ENV_NAME
+        version-label: $(cat $WERCKER_ROOT/ARCHIVE_NAME)
+        region: $EB_ENV_REGION
+        s3-bucket: $EB_S3_BUCKET_PREFIX-$EB_ENV_REGION
+        s3-key: $(cat $WERCKER_ROOT/ARCHIVE_NAME)
