@@ -11,7 +11,7 @@ variable "app_name" {
 }
 
 variable "solution_stack_name" {
-  default = "64bit Amazon Linux 2016.09 v2.2.0 running PHP 5.6"
+  default = "64bit Amazon Linux 2016.09 v2.3.0 running PHP 5.6"
 }
 
 variable "key_pair_name" {
@@ -23,7 +23,7 @@ variable "iaminstanceprofile" {
 }
 
 variable "ami_id" {
-  default = "ami-cc3e1bdb"
+  default = "ami-e12fd6f7"
 }
 
 variable "vpc_id" {
@@ -76,5 +76,5 @@ variable "notification_email" {
 }
 
 variable "healthCheckEndpoint" {
-  default = "HTTP:80/o"
+  default = "HTTP:80/"
 }
