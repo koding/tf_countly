@@ -10,6 +10,8 @@ var nginxConf = fs.readFileSync(nginxConfSourcePath, { encoding: 'utf8' });
 var apiPath = process.env.COUNTLY_PATH || '';
 
 if (apiPath !== '') {
+    // remove the first slash
+    apiPath = apiPath.substring(1)
     var searchRegexp = /location.+?\//g;
     var replaceRegexp = '$&' + apiPath +'\/';
     nginxConf = nginxConf.replace(searchRegexp, replaceRegexp);
