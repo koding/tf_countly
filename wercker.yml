@@ -42,11 +42,8 @@ deploy:
           echo $PAPERTRAIL_PORT > PAPERTRAIL_PORT
           echo $PAPERTRAIL_TOKEN > PAPERTRAIL_TOKEN
 
-          echo "export AWS_REGION=${EB_ENV_REGION}"          >> env_overrides.sh
-          echo "export AWS_ACCESS_KEY=${AWS_ACCESS_KEY}"     >> env_overrides.sh
-          echo "export AWS_SECRET_KEY=${AWS_SECRET_KEY}"     >> env_overrides.sh
-          echo "export S3_BACKUP_PATH=${S3_BACKUP_PATH}"     >> env_overrides.sh
-          echo "export S3_BACKUP_PREFIX=${S3_BACKUP_PREFIX}" >> env_overrides.sh
+          echo "export COUNTLY_PATH=/countly" >> env_overrides.sh
+
           chmod 777 env_overrides.sh
 
     - script:
