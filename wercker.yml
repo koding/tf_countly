@@ -26,6 +26,14 @@ deploy:
     - script:
         name: set ENV vars
         code: |
+          # check if countly required params are set
+          [[ -z $COUNTLY_MONGODB_HOST ]] && \
+              [[ -z $COUNTLY_MONGODB_DB ]] && \
+              [[ -z $COUNTLY_MONGODB_PORT ]] && \
+              [[ -z $COUNTLY_MONGODB_USERNAME ]] && \
+              [[ -z $COUNTLY_MONGODB_PASSWORD ]] && \
+              exit 1
+
           export EB_APP_NAME=${EB_APP_NAME:-koding}
           export EB_ENV_NAME=${EB_ENV_NAME:-koding-countly}
           export EB_ENV_REGION=${EB_ENV_REGION:-us-east-1}
@@ -43,6 +51,13 @@ deploy:
           echo $PAPERTRAIL_TOKEN > PAPERTRAIL_TOKEN
 
           echo "export COUNTLY_PATH=/countly" >> env_overrides.sh
+
+          # set mongo db configuration.
+          echo "export COUNTLY_MONGODB_HOST=$COUNTLY_MONGODB_HOST" >> env_overrides.sh
+          echo "export COUNTLY_MONGODB_DB=$COUNTLY_MONGODB_DB" >> env_overrides.sh
+          echo "export COUNTLY_MONGODB_PORT=$COUNTLY_MONGODB_PORT" >> env_overrides.sh
+          echo "export COUNTLY_MONGODB_USERNAME=$COUNTLY_MONGODB_USERNAME" >> env_overrides.sh
+          echo "export COUNTLY_MONGODB_PASSWORD=$COUNTLY_MONGODB_PASSWORD" >> env_overrides.sh
 
           chmod 777 env_overrides.sh
 
