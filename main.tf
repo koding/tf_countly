@@ -152,11 +152,11 @@ resource "aws_elastic_beanstalk_environment" "environment" {
     name      = "ELBSubnets"
     value     = "${var.elb_subnet_ids}"
   }
-  setting {
-    namespace = "aws:ec2:vpc"
-    name      = "ELBScheme"
-    value     = "internal"
-  }
+  # setting {
+  #   namespace = "aws:ec2:vpc"
+  #   name      = "ELBScheme"
+  #   value     = "internal"
+  # }
   setting {
     namespace = "aws:ec2:vpc"
     name      = "AssociatePublicIpAddress"
