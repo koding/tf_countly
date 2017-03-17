@@ -71,6 +71,10 @@ variable "aws_security_group_prefix" {
   default = "sec-group-"
 }
 
+variable "aws_security_group_name_prefix" {
+  default = "sg-koding-eb-deployment-prod--"
+}
+
 variable "notification_email" {
   default = "sysops+countly@koding.com"
 }

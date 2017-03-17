@@ -5,7 +5,7 @@ resource "aws_security_group" "elb" {
 
   tags {
     cebeci = "ignore"
-    Name = "${var.aws_security_group_prefix}${var.env_name}-elb"
+    Name = "${var.aws_security_group_name_prefix}${var.env_name}-loadbalancer"
   }
 }
 
@@ -16,7 +16,7 @@ resource "aws_security_group" "eb" {
 
   tags {
     cebeci = "ignore"
-    Name = "${var.aws_security_group_prefix}${var.env_name}-eb"
+    Name = "${var.aws_security_group_name_prefix}${var.env_name}-eb"
   }
 }
 
