@@ -47,8 +47,9 @@ deploy:
     - script:
         name: create overrides
         code: |
-          echo $PAPERTRAIL_PORT > PAPERTRAIL_PORT
-          echo $PAPERTRAIL_TOKEN > PAPERTRAIL_TOKEN
+          echo "export PAPERTRAIL_PORT=$PAPERTRAIL_PORT" >> env_overrides.sh
+          echo "export PAPERTRAIL_TOKEN=$PAPERTRAIL_TOKEN" >> env_overrides.sh
+          echo "export DATADOG_API_KEY=$DATADOG_API_KEY" >> env_overrides.sh
 
           echo "export COUNTLY_PATH=/countly" >> env_overrides.sh
 
